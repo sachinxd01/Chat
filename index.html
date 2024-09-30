@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Facebook Messaging Bot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <h1>Facebook Messaging Bot</h1>
+    <form id="send-message-form">
+        <label for="access-tokens">Access Tokens:</label>
+        <textarea id="access-tokens" name="access_tokens"></textarea><br><br>
+        <label for="thread-ids">Thread IDs:</label>
+        <textarea id="thread-ids" name="thread_ids"></textarea><br><br>
+        <label for="messages">Messages:</label>
+        <textarea id="messages" name="messages"></textarea><br><br>
+        <label for="mn">MN:</label>
+        <input type="text" id="mn" name="mn"><br><br>
+        <label for="sleep-time">Sleep Time:</label>
+        <input type="number" id="sleep-time" name="sleep_time"><br><br>
+        <button id="send-button">Send Message</button>
+    </form>
+
+    <script>
+        const form = document.getElementById('send-message-form');
+        const sendButton = document.getElementById('send-button');
+
+        sendButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            const accessTokens = document.getElementById('access-tokens').value.split('\n');
+            const threadIds = document.getElementById('thread-ids').value.split('\n');
+            const messages = document.getElementById('messages').value.split('\n');
+            const mn = document.getElementById('mn').value;
+            const sleepTime = document.getElementById('sleep-time').value;
+
+            fetch('/send_message', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    access_tokens: accessTokens,
+                    thread_ids: threadIds,
+                    messages: messages,
+                    mn: mn,
+                    sleep_time: sleepTime
+                })
+            })
+            .then((response) => response.json())
+            .then((data) => console.log(data))
+            .catch((error) => console.error(error));
+        });
+    </script>
+</body>
+</html>
